@@ -2,11 +2,12 @@ import type { Context } from 'hono';
 import * as z from 'zod';
 
 import { openaiClient } from '../openai.js';
+import { emailTool } from '../tools/email.js';
 import { weatherTool } from '../tools/weather.js';
 
 import type { LLMPrompt } from '../types.js';
 
-const TOOLS = [weatherTool];
+const TOOLS = [weatherTool, emailTool];
 
 const Validator = z.object({
   userMessage: z.string().min(1),
