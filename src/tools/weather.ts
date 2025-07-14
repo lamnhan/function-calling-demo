@@ -1,7 +1,10 @@
-export const weatherTool = {
+import type { LLMTool } from '../types.js';
+
+export const weatherTool: LLMTool = {
   type: 'function',
   name: 'get_weather',
-  description: 'Get current temperature for provided coordinates in celsius.',
+  description:
+    'Get the current weather information for the provided coordinates.',
   parameters: {
     type: 'object',
     properties: {
@@ -12,13 +15,23 @@ export const weatherTool = {
     additionalProperties: false,
   },
   strict: true,
-  handler: getWeather,
-} as const;
+  handler: getWeatherInfo,
+};
 
-async function getWeather(latitude: number, longitude: number) {
-  const response = await fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`,
-  );
-  const data = await response.json();
-  return data.current.temperature_2m;
+async function getWeatherInfo({
+  latitude,
+  longitude,
+}: {
+  latitude: number;
+  longitude: number;
+}) {
+  try {
+    const response = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=weather_code,temperature_2m,wind_speed_10m,precipitation,rain`,
+    );
+    const data = await response.json();
+    return JSON.stringify(data, null, 2);
+  } catch (_error) {
+    return '';
+  }
 }
