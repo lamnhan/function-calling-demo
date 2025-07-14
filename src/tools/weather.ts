@@ -15,10 +15,10 @@ export const weatherTool: LLMTool = {
     additionalProperties: false,
   },
   strict: true,
-  handler: getWeatherInfo,
+  handler: getWeather,
 };
 
-async function getWeatherInfo({
+async function getWeather({
   latitude,
   longitude,
 }: {
